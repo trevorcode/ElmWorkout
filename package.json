@@ -1,0 +1,14 @@
+{
+    "private": true,
+    "name": "my-app",
+    "scripts": {
+        "postinstall": "elm-tooling install",
+        "build-elm-make": "elm make src/Main.elm --optimize --output=docs/elm.js",
+        "build-elm-optimize": "uglifyjs docs/elm.js --compress --mangle --output docs/elm.min.js",
+        "build": "npm run -s build-elm-make & npm run -s build-elm-optimize"
+    },
+    "devDependencies": {
+        "elm-tooling": "^1.8.0",
+        "uglify-js": "^3.17.0"
+    }
+}

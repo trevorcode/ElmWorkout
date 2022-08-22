@@ -1,0 +1,14 @@
+30 workout 20 cooldown
+
+Leg Lift
+Leg Lift Circles
+Scissor Kick
+Cross Crunch
+Bicycle
+Russian Twist
+Leg Raise L
+Leg Raise R
+Plank Rotation
+Plank
+
+x2

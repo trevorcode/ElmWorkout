@@ -1,0 +1,14 @@
+30 workout 15 cooldown
+
+Squat
+Lunge R
+Lunge L
+Lunge knee up R
+Lunge knee up L
+Jump Squat
+Side squat steps
+Wide Squat
+Abductor squat
+Touchdown squat
+
+x2
