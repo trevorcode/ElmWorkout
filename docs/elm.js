@@ -2719,7 +2719,7 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		p: func(record.p),
+		q: func(record.q),
 		Q: record.Q,
 		N: record.N
 	}
@@ -2989,7 +2989,7 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.p;
+		var message = !tag ? value : tag < 3 ? value.a : value.q;
 		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.Q;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
@@ -5382,7 +5382,7 @@ var $author$project$Main$Loading = {$: 1};
 var $author$project$Main$Stopped = 2;
 var $author$project$Main$WorkoutState = F6(
 	function (time, cooldownTime, countdownTime, workout, workoutState, workoutId) {
-		return {J: cooldownTime, C: countdownTime, i: time, I: workout, A: workoutId, s: workoutState};
+		return {J: cooldownTime, t: countdownTime, g: time, I: workout, y: workoutId, o: workoutState};
 	});
 var $elm$http$Http$BadStatus_ = F2(
 	function (a, b) {
@@ -6165,7 +6165,7 @@ var $elm$http$Http$get = function (r) {
 };
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		A6($author$project$Main$WorkoutState, 5, 20, 5, $author$project$Main$Loading, 2, 1),
+		A6($author$project$Main$WorkoutState, 30, 20, 30, $author$project$Main$Loading, 2, 1),
 		$elm$http$Http$get(
 			{
 				K: $elm$http$Http$expectString(
@@ -6448,7 +6448,7 @@ var $elm$core$Basics$neq = _Utils_notEqual;
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Main$subscriptions = function (model) {
-	return (model.s !== 2) ? A2($elm$time$Time$every, 1000, $author$project$Main$Tick) : $elm$core$Platform$Sub$none;
+	return (model.o !== 2) ? A2($elm$time$Time$every, 1000, $author$project$Main$Tick) : $elm$core$Platform$Sub$none;
 };
 var $author$project$Main$Cooldown = 1;
 var $author$project$Main$Failure = {$: 0};
@@ -6458,6 +6458,18 @@ var $author$project$Main$Success = function (a) {
 var $author$project$Main$Workout = 0;
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $author$project$Main$playAudio = _Platform_outgoingPort('playAudio', $elm$json$Json$Encode$string);
+var $elm$core$String$toFloat = _String_toFloat;
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (!maybe.$) {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -6469,8 +6481,8 @@ var $author$project$Main$update = F2(
 						$elm$http$Http$get(
 							{
 								K: $elm$http$Http$expectString(
-									$author$project$Main$GotText(model.A + 1)),
-								R: 'workouts/' + ($elm$core$String$fromInt(model.A + 1) + '.txt')
+									$author$project$Main$GotText(model.y + 1)),
+								R: 'workouts/' + ($elm$core$String$fromInt(model.y + 1) + '.txt')
 							}));
 				} else {
 					return _Utils_Tuple2(
@@ -6478,8 +6490,8 @@ var $author$project$Main$update = F2(
 						$elm$http$Http$get(
 							{
 								K: $elm$http$Http$expectString(
-									$author$project$Main$GotText(model.A - 1)),
-								R: 'workouts/' + ($elm$core$String$fromInt(model.A - 1) + '.txt')
+									$author$project$Main$GotText(model.y - 1)),
+								R: 'workouts/' + ($elm$core$String$fromInt(model.y - 1) + '.txt')
 							}));
 				}
 			case 0:
@@ -6492,7 +6504,7 @@ var $author$project$Main$update = F2(
 							model,
 							{
 								I: $author$project$Main$Success(fullText),
-								A: id
+								y: id
 							}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -6504,45 +6516,72 @@ var $author$project$Main$update = F2(
 				}
 			case 1:
 				var time = msg.a;
-				var _v3 = model.s;
+				var _v3 = model.o;
 				switch (_v3) {
 					case 0:
-						return (model.i > 0) ? _Utils_Tuple2(
+						return (model.g > 0) ? _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{i: model.i - 1}),
+								{g: model.g - 1}),
 							$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{i: model.J, s: 1}),
-							$elm$core$Platform$Cmd$none);
+								{g: model.J, o: 1}),
+							$author$project$Main$playAudio('stop'));
 					case 1:
-						return (model.i > 0) ? _Utils_Tuple2(
+						return (model.g > 0) ? _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{i: model.i - 1}),
+								{g: model.g - 1}),
 							$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{i: model.C, s: 0}),
-							$elm$core$Platform$Cmd$none);
+								{g: model.t, o: 0}),
+							$author$project$Main$playAudio('start'));
 					default:
 						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
-			default:
-				var _v4 = model.s;
+			case 2:
+				var _v4 = model.o;
 				if (_v4 === 2) {
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{i: model.C, s: 0}),
-						$elm$core$Platform$Cmd$none);
+							{g: model.t, o: 0}),
+						$author$project$Main$playAudio('start'));
 				} else {
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{i: model.C, s: 2}),
+							{g: model.t, o: 2}),
 						$elm$core$Platform$Cmd$none);
+				}
+			default:
+				var timer = msg.a;
+				var amount = msg.b;
+				var amountFloat = A2(
+					$elm$core$Maybe$withDefault,
+					0,
+					$elm$core$String$toFloat(amount));
+				switch (timer) {
+					case 'countDown':
+						return (model.o === 2) ? _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{t: amountFloat, g: amountFloat}),
+							$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{t: amountFloat}),
+							$elm$core$Platform$Cmd$none);
+					case 'coolDown':
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{J: amountFloat}),
+							$elm$core$Platform$Cmd$none);
+					default:
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
 		}
 	});
@@ -6552,8 +6591,11 @@ var $author$project$Main$LoadWorkout = function (a) {
 var $author$project$Main$Next = 0;
 var $author$project$Main$Prev = 1;
 var $author$project$Main$ToggleWorkout = {$: 2};
+var $author$project$Main$UpdateTimers = F2(
+	function (a, b) {
+		return {$: 4, a: a, b: b};
+	});
 var $elm$html$Html$button = _VirtualDom_node('button');
-var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
 		return A2(
@@ -6565,6 +6607,9 @@ var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$core$String$fromFloat = _String_fromNumber;
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$input = _VirtualDom_node('input');
+var $elm$html$Html$label = _VirtualDom_node('label');
+var $elm$html$Html$main_ = _VirtualDom_node('main');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 0, a: a};
 };
@@ -6582,30 +6627,81 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
-var $elm$html$Html$pre = _VirtualDom_node('pre');
+var $elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 1, a: a};
+};
+var $elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var $elm$json$Json$Decode$field = _Json_decodeField;
+var $elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
+	});
+var $elm$json$Json$Decode$string = _Json_decodeString;
+var $elm$html$Html$Events$targetValue = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	$elm$json$Json$Decode$string);
+var $elm$html$Html$Events$onInput = function (tagger) {
+	return A2(
+		$elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$html$Html$Events$alwaysStop,
+			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
+};
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
 var $author$project$Main$view = function (model) {
 	return A2(
-		$elm$html$Html$div,
+		$elm$html$Html$main_,
 		_List_Nil,
 		_List_fromArray(
 			[
 				A2(
-				$elm$html$Html$h1,
+				$elm$html$Html$label,
 				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$text(
-						$elm$core$String$fromFloat(model.C))
+						$elm$html$Html$text('Workout'),
+						A2(
+						$elm$html$Html$input,
+						_List_fromArray(
+							[
+								$elm$html$Html$Events$onInput(
+								$author$project$Main$UpdateTimers('countDown')),
+								$elm$html$Html$Attributes$value(
+								$elm$core$String$fromFloat(model.t))
+							]),
+						_List_Nil)
 					])),
 				A2(
-				$elm$html$Html$h1,
+				$elm$html$Html$label,
 				_List_Nil,
 				_List_fromArray(
 					[
-						$elm$html$Html$text(
-						$elm$core$String$fromFloat(model.J))
+						$elm$html$Html$text('Cooldown'),
+						A2(
+						$elm$html$Html$input,
+						_List_fromArray(
+							[
+								$elm$html$Html$Events$onInput(
+								$author$project$Main$UpdateTimers('coolDown')),
+								$elm$html$Html$Attributes$value(
+								$elm$core$String$fromFloat(model.J))
+							]),
+						_List_Nil)
 					])),
 				A2(
 				$elm$html$Html$div,
@@ -6625,7 +6721,7 @@ var $author$project$Main$view = function (model) {
 						_List_fromArray(
 							[
 								$elm$html$Html$text(
-								$elm$core$String$fromFloat(model.i))
+								$elm$core$String$fromFloat(model.g))
 							]))
 					])),
 				function () {
@@ -6638,11 +6734,28 @@ var $author$project$Main$view = function (model) {
 					default:
 						var fullText = _v0.a;
 						return A2(
-							$elm$html$Html$pre,
+							$elm$html$Html$div,
 							_List_Nil,
 							_List_fromArray(
 								[
-									$elm$html$Html$text(fullText)
+									A2(
+									$elm$html$Html$h1,
+									_List_Nil,
+									_List_fromArray(
+										[
+											$elm$html$Html$text(
+											'Workout #' + $elm$core$String$fromInt(model.y))
+										])),
+									A2(
+									$elm$html$Html$div,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$class('workoutText')
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text(fullText)
+										]))
 								]));
 				}
 			}(),

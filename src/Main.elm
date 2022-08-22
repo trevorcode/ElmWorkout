@@ -1,16 +1,12 @@
-module Main exposing (..)
+port module Main exposing (..)
 
 import Browser
-import Html exposing (Html, button, div, h1, pre, text)
-import Html.Attributes exposing (class)
-import Html.Events exposing (onClick)
+import Html exposing (Html, button, div, h1, input, label, main_, pre, text)
+import Html.Attributes exposing (class, value)
+import Html.Events exposing (onClick, onInput)
 import Http
 import Task
 import Time
-
-
-
--- MAIN
 
 
 main =
@@ -20,10 +16,6 @@ main =
         , subscriptions = subscriptions
         , view = view
         }
-
-
-
--- MODEL
 
 
 type Workout
@@ -54,7 +46,7 @@ type alias Model =
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( WorkoutState 5 20 5 Loading Stopped 1
+    ( WorkoutState 30 20 30 Loading Stopped 1
     , Http.get
         { url = "workouts/" ++ String.fromInt 1 ++ ".txt"
         , expect = Http.expectString <| GotText 1
@@ -62,8 +54,7 @@ init _ =
     )
 
 
-
--- UPDATE
+port playAudio : String -> Cmd msg
 
 
 type NextOrPrev
@@ -76,6 +67,7 @@ type Msg
     | Tick Time.Posix
     | ToggleWorkout
     | LoadWorkout NextOrPrev
+    | UpdateTimers String String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -120,14 +112,14 @@ update msg model =
                         ( { model | time = model.time - 1 }, Cmd.none )
 
                     else
-                        ( { model | time = model.cooldownTime, workoutState = Cooldown }, Cmd.none )
+                        ( { model | time = model.cooldownTime, workoutState = Cooldown }, playAudio "stop" )
 
                 Cooldown ->
                     if model.time > 0 then
                         ( { model | time = model.time - 1 }, Cmd.none )
 
                     else
-                        ( { model | time = model.countdownTime, workoutState = Workout }, Cmd.none )
+                        ( { model | time = model.countdownTime, workoutState = Workout }, playAudio "start" )
 
                 Stopped ->
                     ( model, Cmd.none )
@@ -135,14 +127,29 @@ update msg model =
         ToggleWorkout ->
             case model.workoutState of
                 Stopped ->
-                    ( { model | workoutState = Workout, time = model.countdownTime }, Cmd.none )
+                    ( { model | workoutState = Workout, time = model.countdownTime }, playAudio "start" )
 
                 _ ->
                     ( { model | workoutState = Stopped, time = model.countdownTime }, Cmd.none )
 
+        UpdateTimers timer amount ->
+            let
+                amountFloat =
+                    String.toFloat amount |> Maybe.withDefault 0
+            in
+            case timer of
+                "countDown" ->
+                    if model.workoutState == Stopped then
+                        ( { model | countdownTime = amountFloat, time = amountFloat }, Cmd.none )
 
+                    else
+                        ( { model | countdownTime = amountFloat }, Cmd.none )
 
--- SUBSCRIPTIONS
+                "coolDown" ->
+                    ( { model | cooldownTime = amountFloat }, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -154,16 +161,18 @@ subscriptions model =
         Sub.none
 
 
-
--- VIEW
-
-
 view : Model -> Html Msg
 view model =
-    div []
-        [ h1 [] [ text <| String.fromFloat model.countdownTime ]
-        , h1 [] [ text <| String.fromFloat model.cooldownTime ]
-        , div [ class "timer-container"]
+    main_ []
+        [ label []
+            [ text "Workout"
+            , input [ onInput <| UpdateTimers "countDown", value <| String.fromFloat model.countdownTime ] []
+            ]
+        , label []
+            [ text "Cooldown"
+            , input [ onInput <| UpdateTimers "coolDown", value <| String.fromFloat model.cooldownTime ] []
+            ]
+        , div [ class "timer-container" ]
             [ button [ onClick ToggleWorkout, class "timer" ] [ text <| String.fromFloat model.time ]
             ]
         , case model.workout of
@@ -174,7 +183,10 @@ view model =
                 text "Loading..."
 
             Success fullText ->
-                pre [] [ text fullText ]
+                div []
+                    [ h1 [] [ text <| "Workout #" ++ String.fromInt model.workoutId ]
+                    , div [ class "workoutText" ] [ text fullText ]
+                    ]
         , button [ onClick <| LoadWorkout Prev ] [ text "Prev" ]
         , button [ onClick <| LoadWorkout Next ] [ text "Next" ]
         ]

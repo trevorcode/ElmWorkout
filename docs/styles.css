@@ -63,6 +63,13 @@ button:focus {
 	border-color: #666;
 }
 
+main {
+	text-align:center;
+	display:flex;
+	flex-direction:column;
+	align-items: center;
+}
+
 .timerContainer {
     display: flex;
     align-items: center;
@@ -70,6 +77,8 @@ button:focus {
 }
 .timer {
     border-radius: 50%;
+	border:none;
+	outline: none;
     width: 200px;
     height: 200px;
     background-color: #00c3ff;
@@ -81,6 +90,7 @@ button:focus {
     display: flex;
     flex-direction: column;
     justify-content: center;
+	align-items: center;
 }
 .timer:hover {
     background-color: #38d0ff;
@@ -89,4 +99,20 @@ button:focus {
 input,
 label {
     display: inline-block;
+}
+
+h1 {
+	color: #00c3ff;
+	text-transform: uppercase;
+	font-size: 3.25em;
+	font-weight: 100;
+	margin: 0.5rem 0;
+}
+
+.workoutText {
+	white-space: pre;
+}
+
+.nextPrevContainer {
+	margin-top:0.5rem;
 }
